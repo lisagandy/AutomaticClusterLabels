@@ -48,7 +48,7 @@ doc2 label46_Date Started,court name start year releas time birth night date rap
 doc2 label47_Date Stopped,court name year stop releas time birth night date rape expir,,
 "doc2 label48_Alcohol 0=no, 1 = yes",use alcohol tobacco no ye drug bureau abus consumpt problem firearm,,
 "doc2 label49_Current drinker 0=no, 1 = yes",no tea bing ye smoker coffe current beer blood drinker problem man wine,,
-doc2 label50_age last alcohol,men group alcohol gender age year sex peopl last children women,,
+doc2 label50_age last alcohol,use men group alcohol tobacco gender age year drug sex bureau firearm abus peopl consumpt last problem children women,,
 "doc2 label51_Tumor Site 1=Oral cavity,  2=oropharynx, 3= larynx 4 = hypopharynx ",cancer process surgeri site brain growth crash size web develop construct cell oropharynx internet caviti life patient peopl larynx world compani hypopharynx stage center career tumor inform time oral manag,,
 doc2 label52_T stage,a life develop center process peopl career t time world manag stage,,
 "doc2 label53_N stage 0=1, 1=2, 2=3, 2A=4, 2B=5, 2C=6, 3=7, 3B=8 ",a life b develop center process peopl c n career time world manag stage,,
