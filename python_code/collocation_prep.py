@@ -58,7 +58,7 @@ def readAndWriteLabels():
         print row
         strLabel = row['labels_coll']
         #strValues = row['values']
-        strDocName = row['dnumber']
+        strDocName = row['docnumber']
         strDocName2 = row['label']
         #parse the label text
         strLabel = pyU.removePunctuation(strLabel,spaces=True)

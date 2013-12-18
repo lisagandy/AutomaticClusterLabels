@@ -11,7 +11,7 @@ import threading
 import atexit
 import copy
 import re
-from paths import *
+#from paths import *
 
 try:
     import hashlib
@@ -2150,12 +2150,12 @@ def sToday():
 # except (IOError, NameError), e:
 #     lsLastNames = []
 #     
-try:
-    lsStopWords = [l.lower().strip() for l in open(CCU_DATA_PATH + 'stop_words.lst') if not l.startswith('#')]
-    dStopWords = dict(zip(lsStopWords, EZGen(True)))
-except IOError:
+#try:
+    #lsStopWords = [l.lower().strip() for l in open(CCU_DATA_PATH + 'stop_words.lst') if not l.startswith('#')]
+    #dStopWords = dict(zip(lsStopWords, EZGen(True)))
+#except IOError:
     #print 'DIDNT FIND STOPWORDS!'
-    lsStopWords = dStopWords = None
+    #lsStopWords = dStopWords = None
     
 # try:
 #     lsDictWords = [l.lower().strip() for l in open(PATH_TO_DICTIONARY_WORDS) if not l.startswith('#')]
