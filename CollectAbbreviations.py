@@ -3,6 +3,7 @@ from BeautifulSoup import BeautifulSoup
 import string
 import json
 
+#this code gets medical abbreviations from wikipedia and makes a dictionary for use
 class CollectMedicalAbbrevs:
 	
 	dAbbrevs=None
