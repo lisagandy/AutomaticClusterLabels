@@ -12,7 +12,7 @@ class CollectMedicalAbbrevs:
 		self.dAbbrevs={}
 	
 	def dumpToFile(self):
-		f = open('/Users/lisa/Desktop/medical_abbrevs.txt','w')
+		f = open('/Users/lisa/Desktop/med_project/medical_abbrevs.txt','w')
 		json.dump(self.dAbbrevs,f)
 		f.close()
 		

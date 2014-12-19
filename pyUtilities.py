@@ -12,6 +12,7 @@ import atexit
 import copy
 import re
 #from paths import *
+PATH_TO_DICTIONARY_WORDS='/Users/lisa/Documents/Documents/ragnarok-backup-nate/newsatseven/shared/2of12inf.txt'
 
 try:
     import hashlib
@@ -22,7 +23,7 @@ except ImportError:
 import unicodedata
 from os import popen,system
 import urllib2
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 #from pyPaths import *
 
@@ -2161,14 +2162,14 @@ def sToday():
 #except IOError:
     #print 'DIDNT FIND STOPWORDS!'
     #lsStopWords = dStopWords = None
-    
-# try:
-#     lsDictWords = [l.lower().strip() for l in open(PATH_TO_DICTIONARY_WORDS) if not l.startswith('#')]
-#     lsDictWords += ["we're", 'I']
-#     dDictWords = dict(zip(lsDictWords, EZGen(True)))
-# except IOError:
-#     #print 'DIDNT FIND DICTIONARY WORDS!'
-#     lsDictWords = dDictWords = None
+
+try:
+    lsDictWords = [l.lower().strip() for l in open(PATH_TO_DICTIONARY_WORDS) if not l.startswith('#')]
+    lsDictWords += ["we're", 'I']
+    dDictWords = dict(zip(lsDictWords, EZGen(True)))
+except IOError:
+    #print 'DIDNT FIND DICTIONARY WORDS!'
+    lsDictWords = dDictWords = None
 # 
 # try:
 #     lsProfWords = [l.lower().strip() for l in open(PATH_TO_PROFANITY_LIST) if not l.startswith('#')]
@@ -2571,6 +2572,7 @@ def stripCardinalNum(strNum):
 	return strNum.replace('RD','').replace('ND','').replace('ST','').replace('TH','').strip()
 
 if __name__ == '__main__':
-    print removePunctuation('Rx,Chemotherapy')
+    print bIsDictionaryWord('stu')
+    #print removePunctuation('Rx,Chemotherapy')
 	#print lsSplitIntoSentences('Hello world!  My name is Nate')
 

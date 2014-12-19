@@ -7,7 +7,7 @@ create index index_word1_pos2 on collocate_1 (word2,pos2);
 create index index_pos on collocate_1(pos1);
 create index index_pos2  on collocate_1(pos2);
 
-load data local infile '/Users/lisa/Desktop/coca_60k_new.txt' into table collocate_1
+load data local infile '/Users/lisa/Desktop/misc/coca_60k_new.txt' into table collocate_1
 fields terminated by '\t'
 lines terminated by '\n'
 (id_word1,word1,pos1,word2,pos2,freq,MI,coll_before_node, id_collocate_maybe);

@@ -1,9 +1,10 @@
 import json
 import re
 from math import sqrt
+import pyUtilities as pyU
 
 dAbbrev = None
-dAbbrev = json.loads(open('/Users/lisa/Desktop/medical_abbrevs.txt').read())
+dAbbrev = json.loads(open('/Users/lisa/Desktop/med_project/medical_abbrevs.txt').read())
 
 lsStopWords = ['date','stage','status','age']
 
@@ -18,6 +19,9 @@ def similarity(A,B):
   for kind in A:
     if kind in B: 
       total += A[kind] * B[kind] 
+  if scalar(A)==0 or scalar(B)==0:
+      return 0
+      
   return float(total) / (scalar(A) * scalar(B))
 
 def findD(dLabel):
@@ -151,15 +155,22 @@ def getAbbrev(abbrev):
 	dOther={'etoh':'alcohol','pos':'positive','lfu':'last follow up','on fu':'on follow up','w':'white','o':'other','oc':'oral cavity','op':'oropharynx','hp':'hypopharynx','xrt':'radiation therapy','oct':'optimal cutting temperature','ffpe':'formula fixed paraffin embedded','ln':'lymph node','pyr':'pack years','doc':'died of other causes','dod':'died of disease','ned':'no evidence of disease','awd':'alive with disease','f':'female','cn':'clinical n','pn':'pathological lymph node','tx':'treatment','loc':'local','dt':'date','path':'pathological','mrn':'medical record number','chemo':'chemotherapy','dxt':'deep x ray therapy','clin':'clinical','sur':'surgery','cgh':'comparative genome hybridization','rtpcr':'reverse transcriptase polymerase chain reaction','rx':'treatment','tnm':'tumor node metastases','ish':'in situ hybridization','pcr':'polymerase chain reaction','t':'tumor','n':'lymph node','od':'of','stat':'status','dx':'diagnosis','diff':'differentiation','rec':'recurrence','recc':'recurrence','fu':'follow up'}
 	
 	if abbrev in lsIgnore:
-		return None
+		return None,False
 	
 	if abbrev in dOther:
-		return [dOther[abbrev]]
+		return [dOther[abbrev]],True
 	
 	if abbrev in dAbbrev.keys():
-		return dAbbrev[abbrev]
+		return dAbbrev[abbrev],True
 	else:
-		return None
+		#determine if abbrev or not
+		if len(abbrev) < 4:
+		    return None,True
+		elif not pyU.bIsDictionaryWord(abbrev):
+		    return None,True
+		else:
+		    return None,False
+		
 	
 def split_words(instring, prefix = '', words = None):
     if not instring:

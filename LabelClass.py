@@ -8,6 +8,7 @@ stemmer = stem.PorterStemmer()
 
 class LabelClass:
     
+    strSpreadsheetName=None
     strOrigText = None
     strTextAfterChanges=None
     lsOrigColumnValues=None
@@ -19,26 +20,52 @@ class LabelClass:
     dCollocatesOther=None
     strType=None
     iPlace = None
+    mergedText = None
+    
+    #abbreviations in label
+    dAbbrevLabel={}
     
     #get the orig name of the label
-    def __init__(self,name):
+    def __init__(self,name,sName):
+        #name of spreadsheet its in
+        self.strSpreadsheetName=sName
+        
+        #orig name from spreadsheet
         self.strOrigText=name
+        #after "cleaning"
         self.strTextAfterChanges=""
+        
+        #original column values
         self.lsOrigColumnValues=[]
+        #original column values but in a set
         self.lsOrigColumnValuesSet=[]
+        
         self.lsValuesAfterChanges=[]
         self.lsValuesAfterChangesSet=[]
+        
+        #if any mapping of values as clues put here
         self.dValueMapping={}
+        
+        #collocates used internally for clustering
         self.dCollocates={}
+        
+        #collocates used internally for clustering
         self.dCollocatesOther={}
+        
+        #type of label
         self.strType=""
+        
+        #place in spreadsheet (1st, 2nd, or 3rd portion of spreadsheet)
         self.iPlace=-1
+        
+        #abbreviations which exist in the label
+        self.dAbbrevLabel={}
     
     #set place in spreadsheet (1st, 2nd, or 3rd portion of spreadsheet)
     def setIPlace(self,iplace):
         self.iPlace=iplace  
 
-    #add value for this label   
+    #add column value for this label   
     def addValue(self,strColumnValue):
         self.lsOrigColumnValues.append(strColumnValue)
         self.lsOrigColumnValuesSet = list(set([word.strip() for word in self.lsOrigColumnValues]))
@@ -94,12 +121,25 @@ class LabelClass:
         sTemp = util.splitOnWord(sTemp,"ID")
         sTemp = util.splitOnNumbers(sTemp)
         sTemp = sTemp.lower()
+        
+        # #get abbreviations in values:
+        #         for text in self.lsOrigColumnValuesSet:
+        #             lsTemp = util.getAbbrev(text.lower()):
+        #             
+        #             
+        #             
+        
+        #resolve abbreviations if possible
         for text in sTemp.split():
-            lsTemp = util.getAbbrev(text.lower())
+            lsTemp,isAbbrev = util.getAbbrev(text.lower())
+            
             if lsTemp:
+                self.dAbbrevLabel[text] = lsTemp
                 strNew = strNew + ' ' + lsTemp[0]
-            else:
+            elif lsTemp==None and isAbbrev==False:
                 strNew = strNew + ' ' + text.lower()
+            else:
+                self.dAbbrevLabel[text] = None
         return strNew       
 
 
@@ -205,20 +245,30 @@ class LabelClass:
            
         self.strType="id"
     
+    def printAbbrevs(self):
+        for key,val in self.dAbbrevLabel.items():
+            if val:
+                print self.strOrigText + "," + key + "," + val[0]
+            else:
+                print self.strOrigText + "," + key + ",no suggestion"
+    
     def __str__(self):
         retString = "Orig Label: " + self.strOrigText
+        retString += "\nSpreadsheet: " + self.strSpreadsheetName
+        #retString += "\nAbbrevs in Label: " + str(self.dAbbrevLabel)
+        #return retString+"\n"
         retString += "\nRefined Label:" + self.strTextAfterChanges
         retString += "\nPlace in Spreadsheet:" + str(self.iPlace)
         retString += "\nLabel Type:" + self.strType
-        retString += "\nSet of Column Values" + str(self.lsOrigColumnValuesSet)
+        #retString += "\nSet of Column Values" + str(self.lsOrigColumnValuesSet)
         #retString += "\n" + str(float(len(self.lsOrigColumnValuesSet))/len(self.lsOrigColumnValues))
         if self.dValueMapping==None:
             self.dValueMapping={}
         retString += "\nCollocates:" + str(self.dCollocates)
-        retString += "\nValue Mapping:" + str(self.dValueMapping)
+        #retString += "\nValue Mapping:" + str(self.dValueMapping)
         retString += "\nCollocates Other:" + str(self.dCollocatesOther)
         #retString = retString + "\nOrig Values: " + ','.join([val for val in self.strOrigColumnValues])    
-        return retString + "\n"
+        return retString + "\n\n"
         
 if __name__ == '__main__':
     lc = LabelClass('Gender Female =0    Male =1')

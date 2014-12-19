@@ -11,7 +11,8 @@ class CollClass:
             self.getNewConnect()
             
     def getNewConnect(self):
-        self.conn = mdb.connect('localhost', 'root', '', 'COCA_Coll');
+        self.conn = mdb.connect('localhost', 'root', '', 'COCA_Coll2');
+        #print self.conn
         self.cursor = self.conn.cursor(mdb.cursors.DictCursor)
     
 
