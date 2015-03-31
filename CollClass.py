@@ -11,11 +11,10 @@ class CollClass:
             self.getNewConnect()
             
     def getNewConnect(self):
-        self.conn = mdb.connect('localhost', 'root', '', 'COCA_Coll2');
+        self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_collocates');
         #print self.conn
         self.cursor = self.conn.cursor(mdb.cursors.DictCursor)
     
-
     def getColls(self,word,pos):
                #if single character
                if len(word)==1:
