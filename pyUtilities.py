@@ -12,7 +12,7 @@ import atexit
 import copy
 import re
 #from paths import *
-PATH_TO_DICTIONARY_WORDS='/Users/lisa/Documents/Documents/ragnarok-backup-nate/newsatseven/shared/2of12inf.txt'
+PATH_TO_DICTIONARY_WORDS='/home/gandy1l/AutomaticClusterLabels/inData/2of12inf.txt'
 
 try:
     import hashlib
