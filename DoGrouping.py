@@ -236,12 +236,9 @@ class MergeSpreadsheet:
                         else:
                             lsMatrix[index2][index1] = cos
        
-            
                 lsGrouping = self.findMaxGroup(lsMatrix, dNumsRev)
                 lsGroupingAll.append(lsGrouping)
 
-        
-        
         # look through all combos of labels in different spreadsheets
         lsMerged = []
         lsAlone = []
@@ -361,10 +358,13 @@ if __name__ == '__main__':
     
     lsSpreadsheets = sys.argv
     lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
-    
+    lsSpreadsheets = ['/Users/lisa/Dropbox/ColumnMerger/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Dropbox/ColumnMerger/SampleAnnotations/HNSCC/GSE6791.csv']
     dg = MergeSpreadsheet()
     dAllCombos = dg.getAllScores(lsSpreadsheets)
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
+    print lsMerged 
+    print lsAlone
+    assert 0
     dg.writeSpreadsheet(lsMerged,lsAlone)
     
     
