@@ -71,4 +71,5 @@ class CollClass:
 if __name__ == '__main__':  
     cc = CollClass()
     cc.getNewConnect();     
-    print cc.getColls('acid','NN');
+    print cc.getColls('sex','V');
+    print cc.getColls('gender','')

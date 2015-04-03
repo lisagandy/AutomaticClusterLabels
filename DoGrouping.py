@@ -362,7 +362,7 @@ if __name__ == '__main__':
     dg = MergeSpreadsheet()
     dAllCombos = dg.getAllScores(lsSpreadsheets)
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
-    print lsMerged 
+    print [lc.strTextAfterChanges for lc in lsMerged]
     print lsAlone
     assert 0
     dg.writeSpreadsheet(lsMerged,lsAlone)

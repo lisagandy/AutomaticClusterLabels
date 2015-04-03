@@ -33,7 +33,7 @@ class LabelClass:
         #orig name from spreadsheet
         self.strOrigText=name
         #after "cleaning"
-        self.strTextAfterChanges=""
+        self.strTextAfterChanges=name
         
         #original column values
         self.lsOrigColumnValues=[]
@@ -113,6 +113,7 @@ class LabelClass:
         self.dCollocatesOther = dRet
             
     def cleanUp(self,word):
+
         strNew=""
         sTemp = pyU.removePunctuation(word,lsExcept=["=",'-','+'])
         sTemp = util.splitOnWord(sTemp,"date")
@@ -121,7 +122,7 @@ class LabelClass:
         sTemp = util.splitOnWord(sTemp,"ID")
         sTemp = util.splitOnNumbers(sTemp)
         sTemp = sTemp.lower()
-        
+
         # #get abbreviations in values:
         #         for text in self.lsOrigColumnValuesSet:
         #             lsTemp = util.getAbbrev(text.lower()):
@@ -130,13 +131,13 @@ class LabelClass:
         #             
         
         #resolve abbreviations if possible
-        for text in sTemp.split():
+        for text in sTemp.strip().split():
             lsTemp,isAbbrev = util.getAbbrev(text.lower())
-            
+
             if lsTemp:
                 self.dAbbrevLabel[text] = lsTemp
                 strNew = strNew + ' ' + lsTemp[0]
-            elif lsTemp==None and isAbbrev==False:
+            elif lsTemp==None: #and isAbbrev==False:
                 strNew = strNew + ' ' + text.lower()
             else:
                 self.dAbbrevLabel[text] = None
@@ -271,41 +272,13 @@ class LabelClass:
         return retString + "\n\n"
         
 if __name__ == '__main__':
-    lc = LabelClass('Gender Female =0    Male =1')
+    lc = LabelClass('Sex','stuff')
     lc.cleanLabel()
-    print lc.dValueMapping
+    print lc.strOrigText
     print lc.strTextAfterChanges
+    print "stuff"
     lc.getCollsValueCol()
-    print lc.dCollocatesOther
-    assert 0
-     # Spreadsheet: /Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv
-    #   Orig Label: Race 1= Caucasian, 2=African american, 3=Asian
-    #   Refined Label:race
-    #   Place in Spreadsheet:1
-    #   Label Type:enum
-    #   Set of Column Values['1', '', '2', 'Other']
-    #   Collocates:{'race': ['hors', 'finish', 'tough', 'divid', 'auto', 'car', 'ethnic', 'mind', 'matter', 'base', 'enter', 'close', 'democrat', 'arm', 'presidenti']}
-    #   Value Mapping:{'1': 'caucasian', '3': 'asian', '2': 'african american'}
-    #   Collocates Other:{'other': ['word', 'inspir', 'depend', 'countri', 'commun', 'perceiv', 'hand', 'blame', 'thing', 'vari', 'fortun', 'still', 'disagre', 'side', 'countless']}   
-    # 
-    # Spreadsheet: /Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv
-    # Orig Label: Disease status at Last FU 1=NED,2=AWD,3= DOD, 4= DUC 
-    # Refined Label:disease status at last follow up
-    # Place in Spreadsheet:2
-    # Label Type:enum
-    # Set of Column Values['', '3', '1', '? 3-4', '2', '4']
-    # Collocates:{'statu': ['enjoy', 'special', 'relat', 'current', 'maintain', 'econom', 'low', 'physic', 'achiev', 'improv'], 'diseas': ['protect', 'develop', 'mental', 'rare', 'reduc', 'terribl', 'fight', 'common', 'seriou', 'caus'], 'last': ['week', 'minut', 'day', 'hour', 'month'], 'up': [], 'at': [], 'follow': ['ophthalm', 'lead', 'instruct', 'trail', 'suit', 'path']}
-    # Value Mapping:{'1': 'ned', '3': 'dod', '2': 'awd', '4': 'duc'}
-    # Collocates Other:{}
-
-
-
-    lc = LabelClass('Amplification')
-    lc.cleanLabel()
-    lc.lsOrigColumnValuesSet = ['Nugen Ovation_3', 'Nugen_FFPE', 'Nugen Ovation_1', 'Nugen_FFPE_beta', 'Nugen Ovation_2']
-    #lc.getCollsLabel()
-    lc.getCollsValueCol()
-    #print lc.dCollocates
+    print lc.dCollocates
     print lc.dCollocatesOther
     
     
