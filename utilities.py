@@ -5,6 +5,7 @@ import pyUtilities as pyU
 import pySettings as pySet
 
 dAbbrev = None
+
 dAbbrev = json.loads(open(pySet.DATA_PATH + 'medical_abbrevs.txt').read())
 
 lsStopWords = ['date','stage','status','age']

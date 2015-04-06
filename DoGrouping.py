@@ -358,13 +358,12 @@ if __name__ == '__main__':
     
     lsSpreadsheets = sys.argv
     lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
-    lsSpreadsheets = ['/Users/lisa/Dropbox/ColumnMerger/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Dropbox/ColumnMerger/SampleAnnotations/HNSCC/GSE6791.csv']
+    lsSpreadsheets = ['/home/gandy1l/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/home/gandy1l/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
     dg = MergeSpreadsheet()
     dAllCombos = dg.getAllScores(lsSpreadsheets)
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
+
     print [lc.strTextAfterChanges for lc in lsMerged]
-    print lsAlone
-    assert 0
-    dg.writeSpreadsheet(lsMerged,lsAlone)
+
     
     

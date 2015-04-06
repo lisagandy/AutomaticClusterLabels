@@ -13,7 +13,9 @@ import copy
 import re
 import pySettings as pySet
 #from paths import *
+
 PATH_TO_DICTIONARY_WORDS=pySet.DATA_PATH + '2of12inf.txt'
+
 
 try:
     import hashlib
