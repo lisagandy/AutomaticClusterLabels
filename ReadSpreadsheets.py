@@ -35,6 +35,7 @@ class ReadSpreadsheets:
             sc.cleanLabels()
             print 'still cleaning up spreadsheet'
             sc.determineColumnType()
+            print 'still cleaning up spreadsheet 2'
             sc.getColls()
             #print sc
 

@@ -157,8 +157,8 @@ class LabelClass:
         dRet={}
         for word in text.split():
             #stem here
-            word2 = stemmer.stem(word)
-            if len(word2) == 1:
+            wordStem = stemmer.stem(word)
+            if len(wordStem) == 1:
                 continue
             try:
                 lsRet =  cc.getColls(word,'')
@@ -166,8 +166,16 @@ class LabelClass:
                 print ex
                 print word
                 continue
+            #get one more level
+            lsRetMore = []
+            for word2 in lsRet:
+                lsRet2 = cc.getColls(word2,'')
+                lsRetMore.extend(lsRet2)
+                
+            lsRet.extend(lsRetMore)
             lsRet2 = [stemmer.stem(word3) for word3 in lsRet]
-            dRet[word2] = lsRet2
+            lsRet2 = list(set(lsRet2))
+            dRet[wordStem] = lsRet2
             #self.dCollocates[word2] = lsRet2
         return dRet
 
@@ -276,10 +284,21 @@ if __name__ == '__main__':
     lc.cleanLabel()
     print lc.strOrigText
     print lc.strTextAfterChanges
-    print "stuff"
-    lc.getCollsValueCol()
+    lc.getCollsLabel()
     print lc.dCollocates
-    print lc.dCollocatesOther
+    
+    lc2 = LabelClass('gender','stuff')
+    lc2.cleanLabel()
+    print lc2.strOrigText
+    print lc2.strTextAfterChanges
+    lc2.getCollsLabel()
+    print lc2.dCollocates
+    
+    for lsWord in lc2.dCollocates.values():
+        for word in lsWord:
+            if word in lc.dCollocates.values()[0]:
+                print 'FOUND'
+                print word
     
     
     #lc.getColls()

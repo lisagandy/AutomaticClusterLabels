@@ -11,8 +11,9 @@ import threading
 import atexit
 import copy
 import re
+import pySettings as pySet
 #from paths import *
-PATH_TO_DICTIONARY_WORDS='/Users/lisa/Documents/Documents/ragnarok-backup-nate/newsatseven/shared/2of12inf.txt'
+PATH_TO_DICTIONARY_WORDS=pySet.DATA_PATH + '2of12inf.txt'
 
 try:
     import hashlib

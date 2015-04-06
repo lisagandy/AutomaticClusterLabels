@@ -222,7 +222,7 @@ class MergeSpreadsheet:
                 for j in range(0, i):
                     lsInner = []
                     for k in range (0, j + 1):
-                        lsInner.append(0)
+                        lsInner.append(0) 
                     lsMatrix.append(lsInner)
             
                 # fill in matrix with cos
