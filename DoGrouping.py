@@ -26,22 +26,6 @@ class MergeSpreadsheet:
         
         for i, label0 in enumerate(lsLabels):
             cos = lsCosine[i]
-
-#             if labelObj1.strTextAfterChanges.find('pathological') > -1 and label0.strTextAfterChanges.find('clinical') > -1:
-#                 cos = 0
-#             elif labelObj1.strTextAfterChanges.find('clinical') > -1 and label0.strTextAfterChanges.find('pathological') > -1:
-#                 cos = 0
-#             elif labelObj1.strType == 'date' and label0.strType != 'date':
-#                 cos = 0 
-#             elif label0.strType == 'date' and labelObj1.strType != "date":  
-#                 cos = 0
-#             elif labelObj1.strType == "id" and label0.strType != "id":
-#                 cos = 0
-#             elif label0.strType == "id" and labelObj1.strType != "id":
-#                 cos = 0
-#             elif lsCosine <= MIN_COSINE:
-#                 cos = 0
-                     
             lsRetLabel.append([label0, cos])
             
         return lsRetLabel
@@ -79,12 +63,17 @@ class MergeSpreadsheet:
                         
                         for key2, labelObj2 in spreadObj2.dLabels.items():
                             # already paired this label...
-                            d2 = labelObj2.dCollocates
-                            d2.update(labelObj2.dCollocatesOther)
-                            c_sim = utils.cosine_sim(d1, d2)
+                            #if same label just set cosine similarity to 1
+                            c_sim = 0
+                            if labelObj.strTextAfterChanges == labelObj2.strTextAfterChanges:
+                                c_sim = 1
+                            else:
+                                d2 = labelObj2.dCollocates
+                                d2.update(labelObj2.dCollocatesOther)
+                                c_sim = utils.cosine_sim(d1, d2)
                             lsPossible.append([labelObj2, c_sim])
                         
-                        # find cosine sim between all labels                         
+                                                
                         lsObjAll = self.findGrouped(labelObj, lsPossible)
                         if len(lsObjAll) == 0:
                             continue
@@ -325,13 +314,13 @@ class MergeSpreadsheet:
     
     def writeSpreadsheet(self,lsMerged,lsAlone):
         print 'writing master spreadsheet'
-        export_file = open('spreadsheets/export.csv', 'w+')
+        export_file = open('spreadsheets/exportNew.csv', 'w')
         max_num = max([len(x.lsOrigColumnValues) for x in lsMerged] + [len(x.lsOrigColumnValues) for x in lsAlone])
     
         for i in xrange(max_num+2):
             for label in lsMerged:
                 if i==0:
-                    export_file.write('{},{},'.format(label.strTextAfterChanges,label.mergedText))
+                    export_file.write('{},{},'.format(label.strOrigText,label.mergedText))
                 elif i==1:
                     export_file.write('{},,'.format(label.strSpreadsheetName))
                 else:
@@ -342,7 +331,7 @@ class MergeSpreadsheet:
         
             for label in lsAlone:
                 if i==0:
-                    export_file.write('{},'.format(label.strTextAfterChanges))
+                    export_file.write('{},'.format(label.strOrigText))
                 elif i==1:
                     export_file.write('{},'.format(label.strSpreadsheetName))
                 else:
@@ -357,13 +346,15 @@ if __name__ == '__main__':
     import sys
     
     lsSpreadsheets = sys.argv
-    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
-    lsSpreadsheets = ['/home/gandy1l/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/home/gandy1l/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
+    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
+    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
     dg = MergeSpreadsheet()
     dAllCombos = dg.getAllScores(lsSpreadsheets)
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
 
     print [lc.strTextAfterChanges for lc in lsMerged]
+    print [lc.strTextAfterChanges for lc in lsAlone]
+    dg.writeSpreadsheet(lsMerged,lsAlone)
 
     
     

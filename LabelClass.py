@@ -122,13 +122,6 @@ class LabelClass:
         sTemp = util.splitOnWord(sTemp,"ID")
         sTemp = util.splitOnNumbers(sTemp)
         sTemp = sTemp.lower()
-
-        # #get abbreviations in values:
-        #         for text in self.lsOrigColumnValuesSet:
-        #             lsTemp = util.getAbbrev(text.lower()):
-        #             
-        #             
-        #             
         
         #resolve abbreviations if possible
         for text in sTemp.strip().split():
