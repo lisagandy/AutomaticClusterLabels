@@ -33,18 +33,10 @@ class MergeSpreadsheet:
 
     def getAllScores(self,lsSpreadsheets):
             
-        rs = ReadSpreadsheets() 
+        rs = ReadSpreadsheets()
         
-        for f1 in lsSpreadsheets:
-            rs.addSpreadsheet(f1)
-        
-         # rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Rickman.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/SampleInformationFile.OralCavity-MDACC.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter\'s.csv')
         print 'reading spreadsheets'
-        rs.readSpreadsheets()
+        rs.readSpreadsheets(new_spreadsheets)
 
         dAllCombos = {}
         # dAll2 = {}
