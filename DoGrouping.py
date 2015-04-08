@@ -324,7 +324,7 @@ class MergeSpreadsheet:
                 if i==0:
                     export_file.write('{},{},'.format(label.strOrigText,label.mergedText))
                 elif i==1:
-                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[0]))
+                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[-1]))
                 else:
                     try:
                         export_file.write('{},,'.format(label.lsOrigColumnValues[i-2]))
@@ -335,7 +335,7 @@ class MergeSpreadsheet:
                 if i==0:
                     export_file.write('{},{},'.format(label.strOrigText,label.strOrigText))
                 elif i==1:
-                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[0]))
+                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[-1]))
                 else:
                     try:
                         export_file.write('{},,'.format(label.lsOrigColumnValues[i-2]))
