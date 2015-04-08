@@ -323,9 +323,9 @@ class MergeSpreadsheet:
             print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
             print ""
     
-    def writeSpreadsheet(self,lsMerged,lsAlone):
+    def writeSpreadsheet(self,lsMerged,lsAlone,output_name):
         print 'writing master spreadsheet'
-        export_file = open('spreadsheets/export.csv', 'w+')
+        export_file = open('/var/www/uploads/files/{}-values.csv'.format(output_name), 'w+')
         max_num = max([len(x.lsOrigColumnValues) for x in lsMerged] + [len(x.lsOrigColumnValues) for x in lsAlone])
     
         for i in xrange(max_num+2):
