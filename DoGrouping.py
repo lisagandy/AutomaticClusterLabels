@@ -36,7 +36,7 @@ class MergeSpreadsheet:
         rs = ReadSpreadsheets()
         
         print 'reading spreadsheets'
-        rs.readSpreadsheets(new_spreadsheets)
+        rs.readSpreadsheets(lsSpreadsheets)
 
         dAllCombos = {}
         # dAll2 = {}

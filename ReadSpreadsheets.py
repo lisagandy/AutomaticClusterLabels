@@ -6,7 +6,7 @@ class ReadSpreadsheets:
 
     def __init__(self):
         self.lsSpreadsheets = []
-        self.lsSpreadsheetObjs = []    
+        self.lsSpreadsheetObjs = []
     
     #read all spreadsheets, creating appropriate SpreadSheet class
     def readSpreadsheets(self, new_spreadsheets):
