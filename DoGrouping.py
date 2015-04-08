@@ -4,6 +4,7 @@ import utilities as utils
 import pickle
 from LabelClass import *
 import copy
+import pySettings as pySet
 
 MIN_COSINE = 0.6
 
@@ -314,7 +315,7 @@ class MergeSpreadsheet:
     
     def writeSpreadsheet(self,lsMerged,lsAlone,output_name):
         print 'writing master spreadsheet'
-        export_file = open('/var/www/uploads/files/{}-values.csv'.format(output_name), 'w+')
+        export_file = open(pySet.OUTPUT_PATH + '{}-values.csv'.format(output_name), 'w+')
 
         max_num = max([len(x.lsOrigColumnValues) for x in lsMerged] + [len(x.lsOrigColumnValues) for x in lsAlone])
     
@@ -323,7 +324,7 @@ class MergeSpreadsheet:
                 if i==0:
                     export_file.write('{},{},'.format(label.strOrigText,label.mergedText))
                 elif i==1:
-                    export_file.write('{},,'.format(label.strSpreadsheetName))
+                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[0]))
                 else:
                     try:
                         export_file.write('{},,'.format(label.lsOrigColumnValues[i-2]))
@@ -332,14 +333,14 @@ class MergeSpreadsheet:
         
             for label in lsAlone:
                 if i==0:
-                    export_file.write('{},'.format(label.strOrigText))
+                    export_file.write('{},{},'.format(label.strOrigText,label.strOrigText))
                 elif i==1:
-                    export_file.write('{},'.format(label.strSpreadsheetName))
+                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[0]))
                 else:
                     try:
-                        export_file.write('{},'.format(label.lsOrigColumnValues[i-2]))
+                        export_file.write('{},,'.format(label.lsOrigColumnValues[i-2]))
                     except:
-                        export_file.write(',')
+                        export_file.write(',,')
             export_file.write('\n')
         export_file.close()
    
@@ -355,7 +356,7 @@ if __name__ == '__main__':
 
     print [lc.strTextAfterChanges for lc in lsMerged]
     print [lc.strTextAfterChanges for lc in lsAlone]
-    dg.writeSpreadsheet(lsMerged,lsAlone)
+    dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
 
     
     
