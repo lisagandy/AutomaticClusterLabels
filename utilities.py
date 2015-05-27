@@ -46,7 +46,6 @@ def cosine_sim(dLabel,dLabel2):
     dSend2 = findD(dLabel2)
     return similarity(dSend1,dSend2)
 
-
 def hasYESNO(lsYesNo):
 	#flags=re.IGNORECASE
 	matchY = re.compile("(\s+|^)yes(\s+|$)$",flags=re.IGNORECASE)
@@ -143,7 +142,7 @@ def cleanEquivLabel(sText):
 
 
 #cleanEquivLabel('tumor site 1 =oral cavity 2 =oropharynx 3 = larynx 4 = hypopharynx')
-#assert 0	
+#	
 def splitOnNumbers(sTemp):
 	pattern = "(\d+)"
 	indivWords= re.split(pattern,sTemp)
@@ -172,7 +171,7 @@ def getAbbrev(abbrev):
 		    return None,True
 		else:
 		    return None,False
-		
+
 	
 def split_words(instring, prefix = '', words = None):
     if not instring:

@@ -13,8 +13,7 @@ class LabelClass:
     strTextAfterChanges=None
     lsOrigColumnValues=None
     lsOrigColumnValuesSet=None
-    lsValuesAfterChanges=None
-    lsValuesAfterChangesSet=None
+    dValuesAfterChanges=None
     dValueMapping=None
     dCollocates=None
     dCollocatesOther=None
@@ -40,8 +39,8 @@ class LabelClass:
         #original column values but in a set
         self.lsOrigColumnValuesSet=[]
         
-        self.lsValuesAfterChanges=[]
-        self.lsValuesAfterChangesSet=[]
+        self.dValuesAfterChanges={}
+        #self.lsValuesAfterChangesSet=[]
         
         #if any mapping of values as clues put here
         self.dValueMapping={}
@@ -62,24 +61,44 @@ class LabelClass:
         self.dAbbrevLabel={}
     
     #set place in spreadsheet (1st, 2nd, or 3rd portion of spreadsheet)
-    def setIPlace(self,iplace):
-        self.iPlace=iplace  
+    # def setIPlace(self,iplace):
+    #         self.iPlace=iplace  
 
     #add column value for this label   
     def addValue(self,strColumnValue):
+        
+        isnumeric = True
+        try:
+            i = float(strColumnValue.strip())
+        except ValueError,TypeError:
+            isnumeric = False
+        
+        #get set for collocates later
+        if not isnumeric and strColumnValue not in self.lsOrigColumnValues:
+            print  'ADDING NEW TO COLUMN ' + strColumnValue
+            lsValues = [self.cleanUp(word.strip()) for word in strColumnValue.split()]
+        
+            self.lsOrigColumnValuesSet.extend(lsValues)
+            self.lsOrigColumnValuesSet = list(set(self.lsOrigColumnValuesSet))
+        
+        #simply add for print out later
         self.lsOrigColumnValues.append(strColumnValue)
-        self.lsOrigColumnValuesSet = list(set([word.strip() for word in self.lsOrigColumnValues]))
+        
+        #for word in self.lsOrigColumnValuesSet:
+            #if word not in self.dValuesAfterChanges:
+            #self.dValuesAfterChanges[word] = self.cleanUp(word)
+            
     
     #if a mapping for values inside the column heading
     #remove and use
-    def getValueMapping(self):
-        self.dValueMapping = util.getEquiv(self.strOrigText)
-        dNew={}
-        for key,val in self.dValueMapping.items():
-            newKey = pyU.removePunctuation(key,lsExcept=['-','+'])
-            newVal = pyU.removePunctuation(val,lsExcept=['-','+'])
-            dNew[newKey.strip().lower()]=newVal.strip().lower()
-        self.dValueMapping = dNew
+    # def getValueMapping(self):
+    #         self.dValueMapping = util.getEquiv(self.strOrigText)
+    #         dNew={}
+    #         for key,val in self.dValueMapping.items():
+    #             newKey = pyU.removePunctuation(key,lsExcept=['-','+'])
+    #             newVal = pyU.removePunctuation(val,lsExcept=['-','+'])
+    #             dNew[newKey.strip().lower()]=newVal.strip().lower()
+    #         self.dValueMapping = dNew
     
     #get collocates for value mapping (if any) and unique column values
     def getCollsValueCol(self):
@@ -91,23 +110,25 @@ class LabelClass:
             self.dCollocatesOther = {}
             return
 
-        #get value mapping collocates
-        for key,val in self.dValueMapping.items():
-            #check if key isn't number or isn't yes/no
-            if util.hasAlphabet(key) and not util.hasYESNO([key]):
-                newKey = self.cleanUp(key)
-                if len(newKey) > 1:
-                    dRet.update(self.getColls2(newKey))
-            if util.hasAlphabet(val) and not util.hasYESNO([val]):
-                newVal = self.cleanUp(val)
-                if len(newVal) > 1:
-                    dRet.update(self.getColls2(newVal))
+        # #get value mapping collocates
+        #         for key,val in self.dValueMapping.items():
+        #             #check if key isn't number or isn't yes/no
+        #             if util.hasAlphabet(key) and not util.hasYESNO([key]):
+        #                 newKey = self.cleanUp(key)
+        #                 if len(newKey) > 1:
+        #                     dRet.update(self.getColls2(newKey))
+        #             if util.hasAlphabet(val) and not util.hasYESNO([val]):
+        #                 newVal = self.cleanUp(val)
+        #                 if len(newVal) > 1:
+        #                     dRet.update(self.getColls2(newVal))
 
         #get column value collocates
+        print self.lsOrigColumnValuesSet
         for word in self.lsOrigColumnValuesSet:
             if util.hasAlphabet(word) and not util.hasYESNO([word]):
                 newWord = self.cleanUp(word)
                 if len(newWord) > 1:
+                    print 'GETTING COLLOCATE VALUES ' + newWord
                     dRet.update(self.getColls2(newWord))
         
         self.dCollocatesOther = dRet
@@ -140,9 +161,9 @@ class LabelClass:
     #clean up label, includes splitting on certain words,
     #getting rid of certain punctuation, cleaning up abbreviations  
     def cleanLabel(self,label=True):
-        self.getValueMapping()
+        #self.getValueMapping()
         strNew = self.cleanUp(self.strOrigText)
-        strNew = util.cleanEquivLabel(strNew)
+        #strNew = util.cleanEquivLabel(strNew)
         self.strTextAfterChanges = strNew
     
     def getColls2(self,text):
@@ -160,12 +181,12 @@ class LabelClass:
                 print word
                 continue
             #get one more level
-            lsRetMore = []
-            for word2 in lsRet:
-                lsRet2 = cc.getColls(word2,'')
-                lsRetMore.extend(lsRet2)
+            #lsRetMore = []
+            #for word2 in lsRet:
+                #lsRet2 = cc.getColls(word2,'')
+                #lsRetMore.extend(lsRet2)
                 
-            lsRet.extend(lsRetMore)
+            #lsRet.extend(lsRetMore)
             lsRet2 = [stemmer.stem(word3) for word3 in lsRet]
             lsRet2 = list(set(lsRet2))
             dRet[wordStem] = lsRet2
@@ -175,6 +196,7 @@ class LabelClass:
     #get collocates of all words in the label
     #later possibly change for pos  
     def getCollsLabel(self):
+        print 'GETTING COLLOCATES ' + self.strTextAfterChanges
         self.dCollocates = self.getColls2(self.strTextAfterChanges)
         
     
@@ -262,7 +284,8 @@ class LabelClass:
         retString += "\nRefined Label:" + self.strTextAfterChanges
         retString += "\nPlace in Spreadsheet:" + str(self.iPlace)
         retString += "\nLabel Type:" + self.strType
-        #retString += "\nSet of Column Values" + str(self.lsOrigColumnValuesSet)
+        retString += "\nSet of Column Values" + str(self.lsOrigColumnValuesSet)
+        retString += "\nCleaned Column Values" + str(self.dValuesAfterChanges)
         #retString += "\n" + str(float(len(self.lsOrigColumnValuesSet))/len(self.lsOrigColumnValues))
         if self.dValueMapping==None:
             self.dValueMapping={}

@@ -6,7 +6,7 @@ from LabelClass import *
 import copy
 import pySettings as pySet
 
-MIN_COSINE = 0.6
+MIN_COSINE = 0.5
 
 class MergeSpreadsheet:
 
@@ -35,35 +35,42 @@ class MergeSpreadsheet:
             
         rs = ReadSpreadsheets()
         
-        print 'reading spreadsheets'
+        print 'READING SPREADSHEETS'
         rs.readSpreadsheets(lsSpreadsheets)
 
         dAllCombos = {}
         # dAll2 = {}
-        print 'comparing spreadsheets'
+        print 'COMPARING SPREADSHEETS'
         i = 0
-        for spreadObj in rs.lsSpreadsheetObjs[0:-1]:
+        for spreadObj in rs.lsSpreadsheetObjs[i:-1]:
             # print spreadObj
-            for spreadObj2 in rs.lsSpreadsheetObjs[i + 1:]:
+            for spreadObj2 in rs.lsSpreadsheetObjs[i+1:]:
                     dAll = {}
                     for key, labelObj in spreadObj.dLabels.items():
-                        #print labelObj
+                        
                         # find all possible groupings between one label and all other labels
                         d1 = labelObj.dCollocates
                         d1.update(labelObj.dCollocatesOther)
                         lsPossible = []
                         
-                        
                         for key2, labelObj2 in spreadObj2.dLabels.items():
+                            if labelObj2.strOrigText.lower() in ['site','gender','anatomical sites','institute','tissue id','sex']:
+                                print labelObj.strOrigText
+                                print labelObj2.strOrigText
+                           
+                            #print labelObj2
                             # already paired this label...
                             #if same label just set cosine similarity to 1
                             c_sim = 0
+                            #print "c_sim"
                             if labelObj.strTextAfterChanges == labelObj2.strTextAfterChanges:
                                 c_sim = 1
+                                #print c_sim
                             else:
                                 d2 = labelObj2.dCollocates
                                 d2.update(labelObj2.dCollocatesOther)
                                 c_sim = utils.cosine_sim(d1, d2)
+                                #print c_sim
                             lsPossible.append([labelObj2, c_sim])
                         
                                                 
@@ -76,7 +83,8 @@ class MergeSpreadsheet:
                         dAllCombos[spreadObj] = {}
                     dAllCombos[spreadObj][spreadObj2] = dAll    
             i += 1
-                    
+          
+               
         return dAllCombos
 
     
@@ -258,15 +266,15 @@ class MergeSpreadsheet:
         return lsMerged2, list(set(lsAlone))             
   
 
-    def averagePosition(self, lsMerged):
-        
-        count = 0
-        total = 0
-        
-        for lsObj in lsMerged:
-            total += lsObj.iPlace
-            count += 1
-        return total / float(count)
+    # def averagePosition(self, lsMerged):
+    #        
+    #        count = 0
+    #        total = 0
+    #        
+    #        for lsObj in lsMerged:
+    #            total += lsObj.iPlace
+    #            count += 1
+    #        return total / float(count)
     
     def pickName(self,lsObj):
         maxObj = lsObj[0]
@@ -287,23 +295,23 @@ class MergeSpreadsheet:
         return lsNewNames
         
     
-    def makeSpreadsheet(self, lsMerged, lsAlone):
-        # get the average position for each group and alone order fields
-        lsNew = copy.copy(lsMerged)
-        lsNew.extend([[obj] for obj in lsAlone])   
-        #lsPlace = [self.averagePosition(lsObj) for lsObj in lsNew]   
-        
-        #lsSort = sorted(zip(lsPlace, lsNew))
-        #lsPlace,lsNew = zip(*lsSort)
-        
-        #get new names for labels (better or merged)
-        #lsNames = self.getNewNames(lsNew)
-        for obj in lsNew:
-            for obj2 in obj:
-                print obj2 
-            #print name
-            print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-            print ""
+    # def makeSpreadsheet(self, lsMerged, lsAlone):
+    #         # get the average position for each group and alone order fields
+    #         lsNew = copy.copy(lsMerged)
+    #         lsNew.extend([[obj] for obj in lsAlone])   
+    #         #lsPlace = [self.averagePosition(lsObj) for lsObj in lsNew]   
+    #         
+    #         #lsSort = sorted(zip(lsPlace, lsNew))
+    #         #lsPlace,lsNew = zip(*lsSort)
+    #         
+    #         #get new names for labels (better or merged)
+    #         #lsNames = self.getNewNames(lsNew)
+    #         for obj in lsNew:
+    #             for obj2 in obj:
+    #                 print obj2 
+    #             #print name
+    #             print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    #             print ""
     
     def writeSpreadsheet(self,lsMerged,lsAlone,output_name):
         print 'writing master spreadsheet'
@@ -338,17 +346,40 @@ class MergeSpreadsheet:
    
 if __name__ == '__main__': 
     import sys
+    # lsMerged = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
+    #     for lc in lsMerged:
+    #         print lc
+    #     assert 0
+          
     
+    
+    
+    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv']
+    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
+    #path = '/Users/lisa/Desktop/ECOLOGY/'
+    #lsSpreadsheets = [path + 'SAV2004.csv',path+'SAV2005.csv',path+'SAV2013.csv']
     lsSpreadsheets = sys.argv
-    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
-    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
     dg = MergeSpreadsheet()
     dAllCombos = dg.getAllScores(lsSpreadsheets)
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
-
-    print [lc.strTextAfterChanges for lc in lsMerged]
-    print [lc.strTextAfterChanges for lc in lsAlone]
     dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
+    # print [label.strOrigText for label in lsMerged]
+    # print [label.strOrigText for label in lsAlone]
+    # open("/Users/lisa/Desktop/objMerged.pickle",'w').write(pickle.dumps(lsMerged))
+    # open("/Users/lisa/Desktop/objAlone.pickle",'w').write(pickle.dumps(lsAlone))
+    # assert 0
+    # 
+    #    #print lsIn
+    #    #assert 0
+    # 
+    # 
+    # for lc in lsMerged:
+    #     print lc
+    # assert 0
+    # 
+    # print "ALONE"
+    # print [lc for lc in lsAlone]
+    
 
     
     

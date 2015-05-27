@@ -48,6 +48,7 @@ class SpreadsheetClass:
     
     #add column values for each label
     def addRow(self,dDataRow):  
+            print dDataRow
             for key,val in dDataRow.items():
                 if key.strip()=="":
                     continue
@@ -58,7 +59,9 @@ class SpreadsheetClass:
     #clean all labels           
     def cleanLabels(self):
         
+        
         for key,lsObj in self.dLabels.items():
+            print 'CLEANING LABEL ' + lsObj.strOrigText
             lsObj.cleanLabel()
             #print lsObj
     
@@ -68,9 +71,11 @@ class SpreadsheetClass:
                 
     #get collocates for all labels
     def getColls(self):
+        #collocates in label
         for key,lsObj in self.dLabels.items():
             lsObj.getCollsLabel()
         
+        #collocates in values of label
         for key,lsObj in self.dLabels.items():
             lsObj.getCollsValueCol()
     

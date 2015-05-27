@@ -13,28 +13,40 @@ class ReadSpreadsheets:
         self.lsSpreadsheets = new_spreadsheets
 
         for fileName in self.lsSpreadsheets:
-            fRead = csv.reader(open(fileName,'rU'))#,dialect="excel-tab")
+            print fileName
+            
+            f = open(fileName,'rU')
+            fRead = csv.reader(f)#,dialect="excel-tab")
             lsRows = fRead.next()
             print 'labels: {}'.format(lsRows)
+            f.close()
             
             sc = SpreadsheetClass(fileName)
             self.lsSpreadsheetObjs.append(sc)
             #add labels in their original order
+            print 'ADDING LABELS'
             sc.addLabels(lsRows)
             
-            fDRead = csv.DictReader(open(fileName,'rU'))#,dialect="excel-tab")
+            f = open(fileName,'rU')
+            fDRead = csv.DictReader(f)#,dialect="excel-tab")
+            print 'ADDING VALUES'
             for row in fDRead:
                 sc.addRow(row)
             
+            f.close()
             #determine original order of labels
-            sc.detLabelOrder()
+            #sc.detLabelOrder()
             #sc.findAbbreviations()  
             #clean stuff up as much as possible (put abbrev detection here?)
-            try:
-                sc.cleanLabels()
-            except Exception as e:
-                print 'Exception in cleanLabels(): {}'.format(e)
+            #try:
+            print 'CLEANING LABELS'
+            sc.cleanLabels()
+            #except Exception as e:
+                #print 'Exception in cleanLabels(): {}'.format(e)
+            print 'GETTING TYPE OF COLUMNS'
             sc.determineColumnType()
+            
+            print 'GETTING COLLOCATES'
             sc.getColls()
         
         
