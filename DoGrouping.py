@@ -6,7 +6,7 @@ from LabelClass import *
 import copy
 import pySettings as pySet
 
-MIN_COSINE = 0.5
+MIN_COSINE = 0.45
 
 class MergeSpreadsheet:
 
@@ -62,15 +62,15 @@ class MergeSpreadsheet:
                             # already paired this label...
                             #if same label just set cosine similarity to 1
                             c_sim = 0
-                            #print "c_sim"
+                            print "c_sim"
                             if labelObj.strTextAfterChanges == labelObj2.strTextAfterChanges:
                                 c_sim = 1
-                                #print c_sim
+                                print c_sim
                             else:
                                 d2 = labelObj2.dCollocates
                                 d2.update(labelObj2.dCollocatesOther)
                                 c_sim = utils.cosine_sim(d1, d2)
-                                #print c_sim
+                                print c_sim
                             lsPossible.append([labelObj2, c_sim])
                         
                                                 
@@ -355,15 +355,15 @@ if __name__ == '__main__':
     
     
     #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv']
-    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
+    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
     #path = '/Users/lisa/Desktop/ECOLOGY/'
     #lsSpreadsheets = [path + 'SAV2004.csv',path+'SAV2005.csv',path+'SAV2013.csv']
-    lsSpreadsheets = sys.argv
+    #lsSpreadsheets = sys.argv
     dg = MergeSpreadsheet()
     dAllCombos = dg.getAllScores(lsSpreadsheets)
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
-    dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
-    # print [label.strOrigText for label in lsMerged]
+    #dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
+    print [label.strOrigText for label in lsMerged]
     # print [label.strOrigText for label in lsAlone]
     # open("/Users/lisa/Desktop/objMerged.pickle",'w').write(pickle.dumps(lsMerged))
     # open("/Users/lisa/Desktop/objAlone.pickle",'w').write(pickle.dumps(lsAlone))
