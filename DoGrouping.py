@@ -54,23 +54,23 @@ class MergeSpreadsheet:
                         lsPossible = []
                         
                         for key2, labelObj2 in spreadObj2.dLabels.items():
-                            if labelObj2.strOrigText.lower() in ['site','gender','anatomical sites','institute','tissue id','sex']:
-                                print labelObj.strOrigText
-                                print labelObj2.strOrigText
+                            #if labelObj2.strOrigText.lower() in ['site','gender','anatomical sites','institute','tissue id','sex']:
+                                #print labelObj.strOrigText
+                                #print labelObj2.strOrigText
                            
                             #print labelObj2
                             # already paired this label...
                             #if same label just set cosine similarity to 1
                             c_sim = 0
-                            print "c_sim"
+                            #print "c_sim"
                             if labelObj.strTextAfterChanges == labelObj2.strTextAfterChanges:
                                 c_sim = 1
-                                print c_sim
+                                #print c_sim
                             else:
                                 d2 = labelObj2.dCollocates
                                 d2.update(labelObj2.dCollocatesOther)
                                 c_sim = utils.cosine_sim(d1, d2)
-                                print c_sim
+                                #print c_sim
                             lsPossible.append([labelObj2, c_sim])
                         
                                                 
@@ -82,6 +82,8 @@ class MergeSpreadsheet:
                     if not spreadObj in dAllCombos.keys():
                         dAllCombos[spreadObj] = {}
                     dAllCombos[spreadObj][spreadObj2] = dAll    
+                    #print dAllCombos[spreadObj][spreadObj2]
+                    
             i += 1
           
                
@@ -166,15 +168,26 @@ class MergeSpreadsheet:
         # nothing in common, don't merge
         return False
     
-    def findName(self,ls1): 
+    def findNameAndSet(self,ls1): 
         my_list = [len(labelC.strOrigText) for labelC in ls1]
         val, indexMin = min((val, idx) for (idx, val) in enumerate(my_list))
         newName = ls1[indexMin].strOrigText
         
+        newLS = []
         for labelC in ls1:
-            labelC.mergedText = newName
+            label2 = labelC
+            label2.mergedText = newName
+            newLS.append(label2)
         
-        return ls1
+        #namesLS = [newLS[0].strOrigText+"*"+newLS[0].strSpreadsheetName]
+        #newLS2 = [newLS[0]]
+        #for label in newLS[1:]:
+            #strLabel = label.strOrigText+"*"+label.strSpreadsheetName
+            #if strLabel not in namesLS:
+                #namesLS.append(strLabel)
+                #newLS2.append(label)
+        
+        return newLS
         
     
     
@@ -185,13 +198,15 @@ class MergeSpreadsheet:
         # dGrouping={}
         print 'merging spreadsheets'
         lsGroupingAll = []
+        
         for spread1, dTemp2 in dCombos.items():
             for spread2, dTemp in dTemp2.items():
                 # iterate through all labels for the two spreadsheets
                 # set up dNumsRev and dNums
-                dNumsRev = {}
-                dNums = {}
-                i = 0
+                i=0
+                dNums={}
+                dNumsRev={}
+                
                 for key, val in dTemp.items():
                     if len(val) == 0:
                         continue
@@ -232,11 +247,14 @@ class MergeSpreadsheet:
         # look through all combos of labels in different spreadsheets
         lsMerged = []
         lsAlone = []
+        lsTracker = []
+
         for lsGrouping in lsGroupingAll:
                 
                 lsGroupingS1 = [lsObj for lsObj in lsGrouping if len(lsObj) > 1]
                 lsAlone.extend([lsObj[0] for lsObj in lsGrouping if len(lsObj) == 1])
                 
+                #first time through...
                 if len(lsMerged) == 0:
                     lsMerged = lsGroupingS1
                     continue
@@ -248,22 +266,32 @@ class MergeSpreadsheet:
                         for i, lsObj in enumerate(lsMerged):
                             if self.okayGroup(lsObj, lsPair) == True:
                                 lsMerged[i].extend(lsPair)
+                                lsTracker.append(lsPair[0])
+                                lsTracker.append(lsPair[1])
                                 lsMerged[i] = list(set(lsMerged[i]))
                                 append = True
+                                break
                         if not append:
                             lsMerged.append(lsPair)
+                            lsTracker.append(lsPair[0])
+                            lsTracker.append(lsPair[1])
                     
-                        
-          
-                     
-        lsMerged = [list(set(lsObj)) for lsObj in lsMerged]
+        #nice and hacky
+        lsAlone2 = []
+        for obj in lsAlone:
+            if obj not in lsTracker:
+                lsAlone2.append(obj)
+
+        
         #create new name
         lsMerged2=[]
         for ls1 in lsMerged:
-            ls2 = self.findName(ls1)
-            lsMerged2.extend(ls2)
+            ls2 = self.findNameAndSet(ls1)
+            for label in ls2:
+                if not label in lsMerged2:
+                    lsMerged2.append(label)
                         
-        return lsMerged2, list(set(lsAlone))             
+        return lsMerged2, list(set(lsAlone2))             
   
 
     # def averagePosition(self, lsMerged):
@@ -345,29 +373,41 @@ class MergeSpreadsheet:
         export_file.close()
    
 if __name__ == '__main__': 
-    import sys
-    # lsMerged = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
-    #     for lc in lsMerged:
-    #         print lc
-    #     assert 0
+    #import sys
+    # lsMerged = pickle.loads(open('/Users/lisa/Desktop/objMerged.pickle').read())
+    #    print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
+    #    
+    #    assert 0
+    #    lsAlone = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
+    #    print [label.strOrigText + "*"+label.strSpreadsheetName+"$" for label in lsAlone if label.strOrigText]
+    #    #     for lc in lsMerged:
+    #    #         print lc
+    #    assert 0
           
     
     
     
     #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv']
-    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
+    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
     #path = '/Users/lisa/Desktop/ECOLOGY/'
-    #lsSpreadsheets = [path + 'SAV2004.csv',path+'SAV2005.csv',path+'SAV2013.csv']
-    #lsSpreadsheets = sys.argv
+    #lsSpreadsheets = [path + 'SAV2004.csv',path+'SAV2005.csv']
+    lsSpreadsheets = sys.argv
+    #import os
+    #lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/ECOLOGY/')
+    #lsSpreadsheets = ['/Users/lisa/Desktop/ECOLOGY/' + strName for strName in lsSpreadsheets1 if strName.find('.csv') > -1 and strName.find('all')==-1]
+    
     dg = MergeSpreadsheet()
     dAllCombos = dg.getAllScores(lsSpreadsheets)
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
     #dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
-    print [label.strOrigText for label in lsMerged]
-    # print [label.strOrigText for label in lsAlone]
-    # open("/Users/lisa/Desktop/objMerged.pickle",'w').write(pickle.dumps(lsMerged))
-    # open("/Users/lisa/Desktop/objAlone.pickle",'w').write(pickle.dumps(lsAlone))
-    # assert 0
+
+    # print "MERGED"
+    #     print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
+    #     print "ALONE"
+    #     print [label.strOrigText+'*'+label.strSpreadsheetName for label in lsAlone if label.strOrigText]
+    #     open("/Users/lisa/Desktop/objMerged.pickle",'w').write(pickle.dumps(lsMerged))
+    #     open("/Users/lisa/Desktop/objAlone.pickle",'w').write(pickle.dumps(lsAlone))
+    #     assert 0
     # 
     #    #print lsIn
     #    #assert 0

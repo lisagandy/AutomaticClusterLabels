@@ -451,7 +451,21 @@ def weighted_string(*args):
         i += 1
     ret = ' '.join(ret)
     return ret
+   
+def replaceNums(strTemp):
+    strTemp = strTemp.replace('1','one')
+    strTemp = strTemp.replace('2','two')
+    strTemp = strTemp.replace('3','three')
+    strTemp = strTemp.replace('4','four')
+    strTemp = strTemp.replace('5','five')
+    strTemp = strTemp.replace('6','six')
+    strTemp = strTemp.replace('7','seven')
+    strTemp = strTemp.replace('8','eight')
+    strTemp = strTemp.replace('9','nine')
+    strTemp = strTemp.replace('0','zero')
+    return strTemp
     
+   
 def bLooseIn(sLHS, sRHS):
     '''bLooseIn('Hillary Clinton', 'Hillary Rodham Clinton') -> True
     bLooseIn('Hillary Clinton', 'My name is Hillary.  Is yours Clinton?') -> True

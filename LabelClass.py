@@ -82,7 +82,8 @@ class LabelClass:
             self.lsOrigColumnValuesSet = list(set(self.lsOrigColumnValuesSet))
         
         #simply add for print out later
-        self.lsOrigColumnValues.append(strColumnValue)
+        #replace commas b/c of CSV :/
+        self.lsOrigColumnValues.append(strColumnValue.replace(",",' '))
         
         #for word in self.lsOrigColumnValuesSet:
             #if word not in self.dValuesAfterChanges:
@@ -136,7 +137,7 @@ class LabelClass:
     def cleanUp(self,word):
 
         strNew=""
-        sTemp = pyU.removePunctuation(word,lsExcept=["=",'-','+'])
+        sTemp = pyU.removePunctuation(word)#,lsExcept=["=",'-','+'])
         sTemp = util.splitOnWord(sTemp,"date")
         sTemp = util.splitOnWord(sTemp,"Date")
         sTemp = util.splitOnWord(sTemp,"id")
@@ -155,6 +156,8 @@ class LabelClass:
                 strNew = strNew + ' ' + text.lower()
             else:
                 self.dAbbrevLabel[text] = None
+        
+        strNew = pyU.replaceNums(strNew)
         return strNew       
 
 
@@ -164,7 +167,7 @@ class LabelClass:
         #self.getValueMapping()
         strNew = self.cleanUp(self.strOrigText)
         #strNew = util.cleanEquivLabel(strNew)
-        self.strTextAfterChanges = strNew
+        self.strTextAfterChanges = strNew.strip()
     
     def getColls2(self,text):
         cc = CollClass()
@@ -296,10 +299,11 @@ class LabelClass:
         return retString + "\n\n"
         
 if __name__ == '__main__':
-    lc = LabelClass('Sex','stuff')
+    lc = LabelClass('Sex4','stuff')
     lc.cleanLabel()
     print lc.strOrigText
     print lc.strTextAfterChanges
+    assert 0
     lc.getCollsLabel()
     print lc.dCollocates
     

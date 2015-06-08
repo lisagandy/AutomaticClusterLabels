@@ -50,6 +50,8 @@ class SpreadsheetClass:
     def addRow(self,dDataRow):  
             print dDataRow
             for key,val in dDataRow.items():
+                if not key:
+                    continue
                 if key.strip()=="":
                     continue
                 lsObj = self.dLabels[key]

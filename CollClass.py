@@ -3,10 +3,10 @@
 import re
 import pySettings as pySet
 
-if pySet.PRODUCTION_V == False:
-    import pymysql as mdb
-else:
-    import mysql as mdb
+#if pySet.PRODUCTION_V == True:
+import pymysql as mdb
+#else:
+#import mysql as mdb
 
 class CollClass:
     
@@ -72,7 +72,7 @@ class CollClass:
                    
                     
                     self.dFound[word] = lsRet
-                    return lsRet[0:5]
+                    return lsRet[0:10]
                     #else:
                      #return []
                 # except Exception,ex:
@@ -106,7 +106,8 @@ class CollClass:
 if __name__ == '__main__':  
     cc = CollClass()
     cc.getNewConnect();  
-    #cc.getColls('conductivity','')   
+    print cc.getColls('sex','')   
+    assert 0
     #print cc.getColls('Conductivity','V')
     print cc.getColls('extremities','')
     assert 0
