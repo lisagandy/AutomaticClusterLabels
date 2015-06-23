@@ -389,9 +389,9 @@ if __name__ == '__main__':
     
     #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv']
     #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
-    #path = '/Users/lisa/Desktop/ECOLOGY/'
-    #lsSpreadsheets = [path + 'SAV2004.csv',path+'SAV2005.csv',path+'SAV2006.csv']
-    lsSpreadsheets = sys.argv
+    path = '/Users/lisa/Desktop/ECOLOGY 2/'
+    lsSpreadsheets = [path + 'SAV2004.csv',path+'SAV2005.csv']#,path+'SAV2006.csv']
+    #lsSpreadsheets = sys.argv
     #import os
     #lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/ECOLOGY/')
 

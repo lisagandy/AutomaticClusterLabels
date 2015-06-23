@@ -75,11 +75,21 @@ class SpreadsheetClass:
     def getColls(self):
         #collocates in label
         for key,lsObj in self.dLabels.items():
-            lsObj.getCollsLabel()
+            try:
+                lsObj.getCollsLabel()
+            except Exception,ex:
+                print ex
+                print lsObj
         
         #collocates in values of label
         for key,lsObj in self.dLabels.items():
-            lsObj.getCollsValueCol()
+            try:
+                lsObj.getCollsLabel()
+                lsObj.getCollsValueCol()
+            except Exception,ex:
+                print ex
+                print lsObj
+                
     
     #get column type for all labels
     def determineColumnType(self):
