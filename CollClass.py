@@ -21,7 +21,7 @@ class CollClass:
     def getNewConnect(self):
         
         if pySet.PRODUCTION_V == False:
-            self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_coll2');
+            self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_Coll2');
         else:
             self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_collocates');
         #print self.conn

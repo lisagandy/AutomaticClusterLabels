@@ -66,29 +66,30 @@ class LabelClass:
 
     #add column value for this label   
     def addValue(self,strColumnValue):
-        
-        isnumeric = True
         try:
-            i = float(strColumnValue.strip())
-        except ValueError,TypeError:
-            isnumeric = False
+            isnumeric = True
+            try:
+                i = float(strColumnValue.strip())
+            except ValueError,TypeError:
+                isnumeric = False
         
-        #get set for collocates later
-        if not isnumeric and strColumnValue not in self.lsOrigColumnValues:
-            print  'ADDING NEW TO COLUMN ' + strColumnValue
-            lsValues = [self.cleanUp(word.strip()) for word in strColumnValue.split()]
+            #get set for collocates later
+            if not isnumeric and strColumnValue not in self.lsOrigColumnValues:
+                print  'ADDING NEW TO COLUMN ' + strColumnValue
+                lsValues = [self.cleanUp(word.strip()) for word in strColumnValue.split()]
         
-            self.lsOrigColumnValuesSet.extend(lsValues)
-            self.lsOrigColumnValuesSet = list(set(self.lsOrigColumnValuesSet))
+                self.lsOrigColumnValuesSet.extend(lsValues)
+                self.lsOrigColumnValuesSet = list(set(self.lsOrigColumnValuesSet))
         
-        #simply add for print out later
-        #replace commas b/c of CSV :/
-        self.lsOrigColumnValues.append(strColumnValue.replace(",",' '))
+            #simply add for print out later
+            #replace commas b/c of CSV :/
+            self.lsOrigColumnValues.append(strColumnValue.replace(",",' '))
         
-        #for word in self.lsOrigColumnValuesSet:
-            #if word not in self.dValuesAfterChanges:
-            #self.dValuesAfterChanges[word] = self.cleanUp(word)
-            
+            #for word in self.lsOrigColumnValuesSet:
+                #if word not in self.dValuesAfterChanges:
+                #self.dValuesAfterChanges[word] = self.cleanUp(word)
+        except Exception,ex:
+            print 'EXCEPTION IN addVALUE'    
     
     #if a mapping for values inside the column heading
     #remove and use
@@ -199,7 +200,7 @@ class LabelClass:
     #get collocates of all words in the label
     #later possibly change for pos  
     def getCollsLabel(self):
-        print 'GETTING COLLOCATES ' + self.strTextAfterChanges
+        print 'GETTING COLLOCATES ' + self.strTextAfterChanges + ' ' + self.strSpreadsheetName
         self.dCollocates = self.getColls2(self.strTextAfterChanges)
         
     
