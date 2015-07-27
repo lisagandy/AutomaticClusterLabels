@@ -1,6 +1,7 @@
 import csv
 from SpreadsheetClass import SpreadsheetClass
 import os
+import unicodedata
 
 class ReadSpreadsheets:
 
@@ -18,7 +19,7 @@ class ReadSpreadsheets:
             f = open(fileName,'rU')
             fRead = csv.reader(f)#,dialect="excel-tab")
             lsRows = fRead.next()
-            print 'labels: {}'.format(lsRows)
+            lsRows = [unicodedata.normalize('NFKD', row.decode('unicode-escape')).encode('ascii', 'ignore').strip('\x00') for row in lsRows]
             f.close()
             
             sc = SpreadsheetClass(fileName)
@@ -31,6 +32,7 @@ class ReadSpreadsheets:
             fDRead = csv.DictReader(f)#,dialect="excel-tab")
             print 'ADDING VALUES'
             for row in fDRead:
+                row = {unicodedata.normalize('NFKD', key.decode('unicode-escape')).encode('ascii', 'ignore').strip('\x00'): unicodedata.normalize('NFKD', value.decode('unicode-escape')).encode('ascii', 'ignore').strip('\x00') for key, value in row.iteritems()}
                 sc.addRow(row)
             
             f.close()
