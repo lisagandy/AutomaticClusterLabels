@@ -282,7 +282,6 @@ class MergeSpreadsheet:
             if obj not in lsTracker:
                 lsAlone2.append(obj)
 
-        
         #create new name
         lsMerged2=[]
         for ls1 in lsMerged:
@@ -290,8 +289,31 @@ class MergeSpreadsheet:
             for label in ls2:
                 if not label in lsMerged2:
                     lsMerged2.append(label)
+        
+        lsMergeNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsMerged2]
+        #print lsMergeNames
+        lsAloneNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsAlone2]
+        #print ""
+        #print lsAloneNames
+        #print ""
+        #assert 0
+        #'nice and hacky'
+        for index,name in enumerate(lsAloneNames):
+            #print name
+            #print index
+            if name in lsMergeNames:
+                lsAlone2[index] = 'NULL'
+        
+        #print lsAlone2
+        #assert 0
+        
+        lsAlone3=[]
+        for obj in lsAlone2:
+            if obj != 'NULL':
+                lsAlone3.append(obj)
+        
                         
-        return lsMerged2, list(set(lsAlone2))             
+        return lsMerged2, list(set(lsAlone3))             
   
 
     # def averagePosition(self, lsMerged):
@@ -374,31 +396,28 @@ class MergeSpreadsheet:
    
 if __name__ == '__main__': 
     #import sys
-    # lsMerged = pickle.loads(open('/Users/lisa/Desktop/objMerged.pickle').read())
-    #    print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
+    lsMerged = pickle.loads(open('/Users/lisa/Desktop/objMerged.pickle').read())
+    
+    print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
     #    
-    #    assert 0
-    #    lsAlone = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
-    #    print [label.strOrigText + "*"+label.strSpreadsheetName+"$" for label in lsAlone if label.strOrigText]
+    #assert 0
+    lsAlone = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
+    print [label.strOrigText + "*"+label.strSpreadsheetName+"$" for label in lsAlone if label.strOrigText]
     #    #     for lc in lsMerged:
     #    #         print lc
-    #    assert 0
+    assert 0
           
-    
-    
-    
+    dAllCombos = pickle.loads(open('/Users/lisa/Desktop/dCombos.pickle').read())
+   
     #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv']
-    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
-    path = '/Users/lisa/Desktop/GPL570_CSV/'
-    lsSpreadsheets = [path+'GSE22544.csv',path+'GSE12763.csv']#[path + 'GSE21422.csv',path+'GSE26910.csv',path+'GSE13787.csv',path+'GSE23399.csv',path+'GSE22544.csv',path+'GSE12763.csv']
     #lsSpreadsheets = sys.argv
-    #import os
-    #lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/ECOLOGY/')
-
-    #lsSpreadsheets = ['/Users/lisa/Desktop/ECOLOGY/' + strName for strName in lsSpreadsheets1 if strName.find('.csv') > -1 and strName.find('all')==-1]
+    import os
+    lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/Anne data/EOL_csvs')
+    lsSpreadsheets = ['/Users/lisa/Desktop/Anne data/EOL_csvs/' + strName for strName in lsSpreadsheets1 if strName.find('.csv') > -1 and strName.find('all')==-1]
     
     dg = MergeSpreadsheet()
-    dAllCombos = dg.getAllScores(lsSpreadsheets)
+    #dAllCombos = dg.getAllScores(lsSpreadsheets)
+    #open('/Users/lisa/Desktop/dCombos.pickle','w').write(pickle.dumps(dAllCombos))
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
     #dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
 
@@ -406,8 +425,8 @@ if __name__ == '__main__':
     #     print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
     #     print "ALONE"
     #     print [label.strOrigText+'*'+label.strSpreadsheetName for label in lsAlone if label.strOrigText]
-    #     open("/Users/lisa/Desktop/objMerged.pickle",'w').write(pickle.dumps(lsMerged))
-    #     open("/Users/lisa/Desktop/objAlone.pickle",'w').write(pickle.dumps(lsAlone))
+    open("/Users/lisa/Desktop/objMerged.pickle",'w').write(pickle.dumps(lsMerged))
+    open("/Users/lisa/Desktop/objAlone.pickle",'w').write(pickle.dumps(lsAlone))
     #     assert 0
     # 
     #    #print lsIn
