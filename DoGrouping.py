@@ -396,30 +396,30 @@ class MergeSpreadsheet:
    
 if __name__ == '__main__': 
     #import sys
-    lsMerged = pickle.loads(open('/Users/lisa/Desktop/objMerged.pickle').read())
-    
-    print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
-    #    
-    #assert 0
-    lsAlone = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
-    print [label.strOrigText + "*"+label.strSpreadsheetName+"$" for label in lsAlone if label.strOrigText]
-    #    #     for lc in lsMerged:
-    #    #         print lc
-    assert 0
+    # lsMerged = pickle.loads(open('/Users/lisa/Desktop/objMerged.pickle').read())
+    #     
+    #     print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
+    #     #    
+    #     #assert 0
+    #     lsAlone = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
+    #     print [label.strOrigText + "*"+label.strSpreadsheetName+"$" for label in lsAlone if label.strOrigText]
+    #     #    #     for lc in lsMerged:
+    #     #    #         print lc
+    #     assert 0
           
-    dAllCombos = pickle.loads(open('/Users/lisa/Desktop/dCombos.pickle').read())
+    #dAllCombos = pickle.loads(open('/Users/lisa/Desktop/dCombos.pickle').read())
    
     #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv']
     #lsSpreadsheets = sys.argv
     import os
-    lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/Anne data/EOL_csvs')
-    lsSpreadsheets = ['/Users/lisa/Desktop/Anne data/EOL_csvs/' + strName for strName in lsSpreadsheets1 if strName.find('.csv') > -1 and strName.find('all')==-1]
+    lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/ECOLOGY 2/')
+    lsSpreadsheets = ['/Users/lisa/Desktop/ECOLOGY 2/' + strName for strName in lsSpreadsheets1 if strName.find('.csv') > -1 and strName.find('all')==-1]
     
     dg = MergeSpreadsheet()
-    #dAllCombos = dg.getAllScores(lsSpreadsheets)
-    #open('/Users/lisa/Desktop/dCombos.pickle','w').write(pickle.dumps(dAllCombos))
+    dAllCombos = dg.getAllScores(lsSpreadsheets)
+    open('/Users/lisa/Desktop/dCombos.pickle','w').write(pickle.dumps(dAllCombos))
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
-    #dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
+    dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
 
     # print "MERGED"
     #     print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]

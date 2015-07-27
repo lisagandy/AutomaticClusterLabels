@@ -32,7 +32,10 @@ class ReadSpreadsheets:
             fDRead = csv.DictReader(f)#,dialect="excel-tab")
             print 'ADDING VALUES'
             for row in fDRead:
-                row = {unicodedata.normalize('NFKD', key.decode('unicode-escape')).encode('ascii', 'ignore').strip('\x00'): unicodedata.normalize('NFKD', value.decode('unicode-escape')).encode('ascii', 'ignore').strip('\x00') for key, value in row.iteritems()}
+                try:
+                    row = {unicodedata.normalize('NFKD', key.decode('unicode-escape')).encode('ascii', 'ignore').strip('\x00'): unicodedata.normalize('NFKD', value.decode('unicode-escape')).encode('ascii', 'ignore').strip('\x00') for key, value in row.iteritems()}
+                except Exception,ex:
+                    print ex
                 sc.addRow(row)
             
             f.close()
