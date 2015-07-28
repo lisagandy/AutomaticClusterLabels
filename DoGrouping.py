@@ -168,10 +168,42 @@ class MergeSpreadsheet:
         # nothing in common, don't merge
         return False
     
-    def findNameAndSet(self,ls1): 
-        my_list = [len(labelC.strOrigText) for labelC in ls1]
-        val, indexMin = min((val, idx) for (idx, val) in enumerate(my_list))
-        newName = ls1[indexMin].strOrigText
+    def findNameAndSet(self,ls1,lsNames): 
+        #print [obj.strOrigText for obj in ls1]
+        
+        #find most repeated name
+        lsText=[]
+        lsFreq = []
+        #get counts of each name
+        for obj in ls1:
+            if obj.strOrigText in lsText:
+                lsFreq[lsText.index(obj.strOrigText)] +=1
+            else:
+                lsText.append(obj.strOrigText)
+                lsFreq.append(1)
+        
+        #find most repeated name
+        val, indexMax = max((val, idx) for (idx, val) in enumerate(lsFreq))
+        newName = lsText[indexMax]
+        
+        #if group name already taken use shortest name
+        if newName in lsNames:
+            #find shortest name
+            my_list = [len(labelC.strOrigText) for labelC in ls1]
+            val, indexMin = min((val, idx) for (idx, val) in enumerate(my_list))
+            newName = ls1[indexMin].strOrigText
+        
+        #otherwise jsut make up a name
+        if newName in lsNames:
+            i = 2
+            oldName = newName
+            while newName in lsNames or i>=1000:
+                    newName = oldName + str(i)
+                    i+=1
+        
+        print newName
+        print ""
+        lsNames.append(newName)
         
         newLS = []
         for labelC in ls1:
@@ -187,7 +219,7 @@ class MergeSpreadsheet:
                 #namesLS.append(strLabel)
                 #newLS2.append(label)
         
-        return newLS
+        return newLS,lsNames
         
     
     
@@ -244,7 +276,8 @@ class MergeSpreadsheet:
                 lsGrouping = self.findMaxGroup(lsMatrix, dNumsRev)
                 lsGroupingAll.append(lsGrouping)
 
-        # look through all combos of labels in different spreadsheets
+        # look through all combos of labels in every 2 spreadsheets
+        # and combine same groups
         lsMerged = []
         lsAlone = []
         lsTracker = []
@@ -283,13 +316,17 @@ class MergeSpreadsheet:
                 lsAlone2.append(obj)
 
         #create new name
+        lsNames=[]
         lsMerged2=[]
         for ls1 in lsMerged:
-            ls2 = self.findNameAndSet(ls1)
+            print [obj.strOrigText for obj in ls1]
+            ls2,lsNames = self.findNameAndSet(ls1,lsNames)
+            
             for label in ls2:
                 if not label in lsMerged2:
                     lsMerged2.append(label)
         
+        #assert 0
         lsMergeNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsMerged2]
         #print lsMergeNames
         lsAloneNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsAlone2]
@@ -312,20 +349,14 @@ class MergeSpreadsheet:
             if obj != 'NULL':
                 lsAlone3.append(obj)
         
+        lsMergeNames = [obj.strOrigText + obj.strSpreadsheetName + obj.mergedText for obj in lsMerged2]
+        #for name in lsMergeNames:
+            #print name
+        #print lsMergeNames
                         
         return lsMerged2, list(set(lsAlone3))             
   
 
-    # def averagePosition(self, lsMerged):
-    #        
-    #        count = 0
-    #        total = 0
-    #        
-    #        for lsObj in lsMerged:
-    #            total += lsObj.iPlace
-    #            count += 1
-    #        return total / float(count)
-    
     def pickName(self,lsObj):
         maxObj = lsObj[0]
         for obj in lsObj[1:]:
@@ -343,25 +374,7 @@ class MergeSpreadsheet:
                 lsNewNames.append(self.pickName(lsObj))
         
         return lsNewNames
-        
-    
-    # def makeSpreadsheet(self, lsMerged, lsAlone):
-    #         # get the average position for each group and alone order fields
-    #         lsNew = copy.copy(lsMerged)
-    #         lsNew.extend([[obj] for obj in lsAlone])   
-    #         #lsPlace = [self.averagePosition(lsObj) for lsObj in lsNew]   
-    #         
-    #         #lsSort = sorted(zip(lsPlace, lsNew))
-    #         #lsPlace,lsNew = zip(*lsSort)
-    #         
-    #         #get new names for labels (better or merged)
-    #         #lsNames = self.getNewNames(lsNew)
-    #         for obj in lsNew:
-    #             for obj2 in obj:
-    #                 print obj2 
-    #             #print name
-    #             print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    #             print ""
+  
     
     def writeSpreadsheet(self,lsMerged,lsAlone,output_name):
         print 'writing master spreadsheet'
@@ -407,17 +420,17 @@ if __name__ == '__main__':
     #     #    #         print lc
     #     assert 0
           
-    #dAllCombos = pickle.loads(open('/Users/lisa/Desktop/dCombos.pickle').read())
+    dAllCombos = pickle.loads(open('/Users/lisa/Desktop/dCombos.pickle').read())
    
     #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv']
     #lsSpreadsheets = sys.argv
-    import os
-    lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/ECOLOGY 2/')
-    lsSpreadsheets = ['/Users/lisa/Desktop/ECOLOGY 2/' + strName for strName in lsSpreadsheets1 if strName.find('.csv') > -1 and strName.find('all')==-1]
+    #import os
+    #lsSpreadsheets1 = os.listdir('/Users/lisa/Desktop/ECOLOGY 2/')
+    #lsSpreadsheets = ['/Users/lisa/Desktop/ECOLOGY 2/' + strName for strName in lsSpreadsheets1 if strName.find('.csv') > -1 and strName.find('all')==-1]
     
     dg = MergeSpreadsheet()
-    dAllCombos = dg.getAllScores(lsSpreadsheets)
-    open('/Users/lisa/Desktop/dCombos.pickle','w').write(pickle.dumps(dAllCombos))
+    #dAllCombos = dg.getAllScores(lsSpreadsheets)
+    #open('/Users/lisa/Desktop/dCombos.pickle','w').write(pickle.dumps(dAllCombos))
     lsMerged,lsAlone = dg.doGrouping(dAllCombos)
     dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
 
