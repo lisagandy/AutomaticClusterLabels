@@ -334,7 +334,7 @@ class MergeSpreadsheet:
                 if not label in lsMerged2:
                     lsMerged2.append(label)
         
-        assert 0
+        #assert 0
         lsMergeNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsMerged2]
         
         lsAloneNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsAlone2]
