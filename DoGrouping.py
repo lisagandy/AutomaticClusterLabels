@@ -153,15 +153,15 @@ class MergeSpreadsheet:
         if len(list(set(lsNew))) < len(lsNew):
             # check to see if the remaining elements are in the the
             # same spreadsheet if so not good
-            lsSet1 = copy.copy(set(ls1))
-            lsSet2 = copy.copy(set(ls2))
-            lsNew2 = list(lsSet1.symmetric_difference(lsSet2))
+            #lsSet1 = copy.copy(set(ls1))
+            #lsSet2 = copy.copy(set(ls2))
+            #lsNew2 = list(lsSet1.symmetric_difference(lsSet2))
             # print lsNew2
-            lsSpread = []
-            for obj in lsNew2:
-                if obj.strSpreadsheetName in lsSpread:
-                    return False
-                lsSpread.append(obj.strSpreadsheetName)
+            #lsSpread = []
+            #for obj in lsNew2:
+                #if obj.strSpreadsheetName in lsSpread:
+                    #return False
+                #lsSpread.append(obj.strSpreadsheetName)
             
             # okay to merge
             return True
@@ -282,6 +282,7 @@ class MergeSpreadsheet:
         lsAlone = []
         lsTracker = []
 
+
         for lsGrouping in lsGroupingAll:
                 
                 lsGroupingS1 = [lsObj for lsObj in lsGrouping if len(lsObj) > 1]
@@ -295,6 +296,8 @@ class MergeSpreadsheet:
                 while len(lsGroupingS1) > 0:
                         append = False
                         lsPair = lsGroupingS1.pop(0)
+                        #print [obj.strOrigText + obj.strSpreadsheetName for obj in lsPair]
+                        #print ""
                         
                         # look through every merged pair
                         for i, lsObj in enumerate(lsMerged):
@@ -309,7 +312,9 @@ class MergeSpreadsheet:
                             lsMerged.append(lsPair)
                             lsTracker.append(lsPair[0])
                             lsTracker.append(lsPair[1])
-                    
+        
+        
+        #assert 0            
         #nice and hacky
         lsAlone2 = []
         for obj in lsAlone:
@@ -320,15 +325,16 @@ class MergeSpreadsheet:
         lsNames=[]
         lsMerged2=[]
         for ls1 in lsMerged:
+            lsMergedTemp = list(set(ls1))
             #print [obj.strOrigText+obj.strSpreadsheetName for obj in ls1]
-            ls2,lsNames = self.findNameAndSet(ls1,lsNames)
-            #print [obj.strOrigText+obj.strSpreadsheetName+str(obj.mergedText) for obj in ls2]
-            #print ""
+            ls2,lsNames = self.findNameAndSet(lsMergedTemp,lsNames)
+            print [obj.strOrigText+obj.strSpreadsheetName+str(obj.mergedText) for obj in ls2]
+            print ""
             for label in ls2:
                 if not label in lsMerged2:
                     lsMerged2.append(label)
         
-        #assert 0
+        assert 0
         lsMergeNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsMerged2]
         
         lsAloneNames = [obj.strOrigText + obj.strSpreadsheetName for obj in lsAlone2]
@@ -416,11 +422,14 @@ if __name__ == '__main__':
     #print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
     #     #    
     #     #assert 0
-    #     lsAlone = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
-    #     print [label.strOrigText + "*"+label.strSpreadsheetName+"$" for label in lsAlone if label.strOrigText]
+    #print ""
+    #print ""
+    #print ""
+    #lsAlone = pickle.loads(open('/Users/lisa/Desktop/objAlone.pickle').read())
+    #print [label.strOrigText + "*"+label.strSpreadsheetName+"$" for label in lsAlone if label.strOrigText]
     #     #    #     for lc in lsMerged:
     #     #    #         print lc
-    #     assert 0
+    #assert 0
           
     dAllCombos = pickle.loads(open('/Users/lisa/Desktop/dCombos.pickle').read())
    
@@ -438,6 +447,9 @@ if __name__ == '__main__':
 
     # print "MERGED"
     print [label.strOrigText+'*'+label.mergedText+'*' + label.strSpreadsheetName+"$" for label in lsMerged if label.strOrigText]
+    print ""
+    print ""
+    print ""
     print "ALONE"
     print [label.strOrigText+'*'+label.strSpreadsheetName for label in lsAlone if label.strOrigText]
     open("/Users/lisa/Desktop/objMerged.pickle",'w').write(pickle.dumps(lsMerged))
